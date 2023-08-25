@@ -1,34 +1,24 @@
 "use client";
-import { FormEvent, useState } from "react";
-import signUp from "./(firebase)/singup";
+import React from "react";
+import { useState } from "react";
+import signIn from "../(firebase)/signin";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { doc, setDoc} from "firebase/firestore";
-import { db } from "./(firebase)/firebase";
-export default function SignUp() {
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
-  const router = useRouter();
-  const handleForm = async (event: FormEvent) => {
+
+function LogIn() {
+  const Router = useRouter();
+  const [input, setInput] = useState({ email: "", password: "" });
+  const handleForm = async (event) => {
     event.preventDefault();
-
-    const { result, error } = await signUp(input.email, input.password);
-
+    const { result, error } = await signIn(input.email, input.password);
     if (error) {
       return console.log(error);
     }
-    await setDoc(doc(db, "/users",input.email),{
-      name:input.email,
-      email:input.email,
-      friends:[]});
-    
-
     // else successful
+    Router.push("/LandingPage");
     console.log(result);
-    router.push("/LandingPage");
+  
   };
+  
   return (
     <div className="h-screen w-screen flex justify-center items-center text-black">
       <div className="h-[450px] w-[400px] bg-blue-900 flex justify-center items-center  ">
@@ -57,11 +47,10 @@ export default function SignUp() {
             type="submit"
             value="Sign Up"
           />
-          <Link className="py-2 px-4 rounded bg-white w-fit" href={"/LogIn"}>
-            Already have an account? Log In.
-          </Link>
         </form>
       </div>
     </div>
   );
 }
+
+export default LogIn;

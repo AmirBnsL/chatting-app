@@ -1,0 +1,7 @@
+look 
+every sign up makes a document in users collection
+every document got 4 thing i guess
+displayname
+email
+friends 
+ForEach friend we got his name and his  message
