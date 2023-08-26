@@ -23,7 +23,7 @@ function SearchBar({
     setSearchValue("");
   };
   return (
-    <div className="w-10/12 flex items-center justify-around">
+    <div className="w-full flex items-center justify-around">
         <div className="relative w-8 h-8 " onClick={()=> {setIsOpen((prevOpen)=> !prevOpen)}}>
         <Image src="/images/hamburger.png" fill={true} alt="Hamburger"></Image>
             </div>
