@@ -11,7 +11,7 @@ function ContactItem({ contact }) {
   React.useEffect(() => {console.log('current chat',currentChat);}, [currentChat])
   return (
     <div
-      className="h-fit flex items-center p-4 m-2 hover:bg-FajrBlue gap-5"
+      className="h-fit flex items-center p-4 m-2 hover:bg-FajrBlue gap-5 w-fit"
       onClick={HandleClick}
     >
       <button className="w-16 h-16 rounded-full relative">
@@ -22,7 +22,7 @@ function ContactItem({ contact }) {
           fill={true}
         />
       </button>
-      <div className="font-semibold text-gray-100 text-lg">
+      <div className="font-semibold text-gray-100">
         {contact.name}
       </div>
     </div>

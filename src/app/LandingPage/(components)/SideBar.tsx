@@ -18,7 +18,7 @@ import HamburgerBar from "./HamburgerBar";
   }
   */
 function SideBar() {
-  const [isOpen,setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
   const [dbUsers, setDbUsers] = React.useState([]); //is the list of friends of the current user
   const [searchValue, setSearchValue] = React.useState("");
   const [contacts, setContacts] = React.useState([]); //is the list of friends of the current user that is gonna
@@ -38,7 +38,7 @@ function SideBar() {
       };
       FetchedFriends(); */
     getContacts({ db, currentUser }).then((res) => {
-            setFriendsArr(res[0]);
+      setFriendsArr(res[0]);
       setDbUsers(res[1]);
       setIsLoading(false);
     });
@@ -62,34 +62,45 @@ function SideBar() {
       setContacts(newContacts);
     })();
   }, [dbUsers]);
-   useEffect(() => { console.log('contacts:',contacts)
-    console.log('DBusers' , dbUsers)
-    }, [contacts,dbUsers]);   
+  useEffect(() => {
+    console.log("contacts:", contacts);
+    console.log("DBusers", dbUsers);
+  }, [contacts, dbUsers]);
   return (
-    <div className="md:basis-1/4 basis-1/3 bg-blue-950 flex flex-col items-center gap-1 h-screen">
-      {!isOpen ? (
-  <>
-    <div className="flex justify-center items-center w-full h-20 bg-FajrBlue">
-      <SearchBar
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        setIsOpen={setIsOpen}
-      ></SearchBar>
-    </div>
-    <Contacts
-      contacts={contacts.filter((contact) => contact.name.includes(searchValue))}
-    ></Contacts>
+    <>
+      <div
+        className={`md:basis-1/4 basis-1/3 bg-blue-950 flex-shrink-1 flex flex-col items-center gap-1 h-screen`}
+      >
+        <div
+          className={`flex justify-center items-center h-20 bg-FajrBlue w-full`}
+        >
+          <SearchBar
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            setIsOpen={setIsOpen}
+            isOpen={isOpen}
+          ></SearchBar>
+        </div>
+        <Contacts
+          contacts={contacts.filter((contact) =>
+            contact.name.includes(searchValue)
+          )}
+        ></Contacts>
 
-    <AddingElement
-      dbUsers={dbUsers}
-      contacts={contacts}
-      setContacts={setContacts}
-    />
-  </>
-) : (
-  <HamburgerBar setIsOpen={setIsOpen}></HamburgerBar>
-)}
-    </div>
+        <AddingElement
+          dbUsers={dbUsers}
+          contacts={contacts}
+          setContacts={setContacts}
+        />
+      </div>
+      <div
+        className={`md:basis-1/4 basis-1/3 bg-blue-950 flex flex-col w-[27vw] md:w-[27vw] items-center gap-1 absolute h-screen ${
+          isOpen ? "" : "translate-x-[-100%]"
+        } transition-all duration-300`}
+      >
+        <HamburgerBar setIsOpen={setIsOpen} isOpen={setIsOpen}></HamburgerBar>
+      </div>
+    </>
   );
 }
 

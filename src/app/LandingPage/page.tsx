@@ -32,7 +32,7 @@ function LandingPage() {
     <>
       <CurrentChatContext.Provider value={{ currentChat, setCurrentChat }}>
         <SideBar></SideBar>
-      <div className="grow bg-MondayBlue flex items-center justify-around flex-col h-screen">
+      <div className="basis-3/4 grow bg-MondayBlue flex items-center justify-around flex-col h-screen">
         {currentChat && (
           <>
             <NavBar name={currentChat.name} imgSrc={currentChat.photo}></NavBar>
