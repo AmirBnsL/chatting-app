@@ -28,6 +28,7 @@ export default function AddContact({
         return uniqueArr;
       });
     }
+    console.log(contacts)
     const UniqueContact = contacts.find(
       (contact: any) => contact.email === searchedContact
     );
@@ -42,6 +43,9 @@ export default function AddContact({
       setContacts(updatedContacts);
       const docRef = doc(db, "users", currentUser.user.email);
       const docSnap = await getDoc(docRef);
+
+
+
       if (docSnap.exists()) {
         const userData = docSnap.data();
         const updatedFriends = [...userData.friends, foundObject.email];

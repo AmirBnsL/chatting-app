@@ -69,10 +69,10 @@ function SideBar() {
   return (
     <>
       <div
-        className={`md:basis-1/4 basis-1/3 bg-blue-950 flex-shrink-1 flex flex-col items-center gap-1 h-screen`}
+        className={`md:basis-3/12 basis-1/4 bg-blue-gradient flex-shrink-1 flex flex-col items-center gap-1 h-screen overflow-scroll `}
       >
         <div
-          className={`flex justify-center items-center h-20 bg-FajrBlue w-full`}
+          className={`flex justify-center items-center h-20 w-full`}
         >
           <SearchBar
             searchValue={searchValue}
@@ -94,7 +94,7 @@ function SideBar() {
         />
       </div>
       <div
-        className={`md:basis-1/4 basis-1/3 bg-blue-950 flex flex-col w-[27vw] md:w-[27vw] items-center gap-1 absolute h-screen ${
+        className={`md:basis-1/4 basis-1/3 bg-blue-950 flex  flex-col w-[27vw] md:w-[27vw] items-center gap-1 absolute h-screen ${
           isOpen ? "" : "translate-x-[-100%]"
         } transition-all duration-300`}
       >

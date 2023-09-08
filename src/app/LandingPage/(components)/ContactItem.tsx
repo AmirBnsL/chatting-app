@@ -5,24 +5,29 @@ import Image from "next/image";
 
 function ContactItem({ contact }) {
   const { currentChat, setCurrentChat } = React.useContext(CurrentChatContext);
+  const isCurrentChat = currentChat?.name == contact?.name;
+
   const HandleClick = () => {
-        setCurrentChat(contact)
+    console.log(isCurrentChat)
+    !isCurrentChat ? setCurrentChat(contact) : setCurrentChat(null);
   };
   React.useEffect(() => {console.log('current chat',currentChat);}, [currentChat])
   return (
     <div
-      className="h-fit flex items-center p-4 m-2 hover:bg-FajrBlue gap-5 w-fit"
+      className={`h-fit w-full flex items-center box-border p-2 m-2 hover:bg-cyan-400 ${isCurrentChat ? 'bg-cyan-400 relative'  : '' } gap-5 w-fit`}
       onClick={HandleClick}
     >
-      <button className="w-16 h-16 rounded-full relative">
+      {isCurrentChat && 
+      <div className="w-1  bg-cyan-800 absolute h-full left-0"></div>}
+      <div className="w-16 h-16 rounded-full overflow-hidden relative">
         {" "}
         <Image
           src={"/images/no-profile-picture-icon.svg"}
           alt="profile-profile"
           fill={true}
         />
-      </button>
-      <div className="font-semibold text-gray-100">
+      </div>
+      <div className="font-semibold text-ultra_violet-100">
         {contact.name}
       </div>
     </div>

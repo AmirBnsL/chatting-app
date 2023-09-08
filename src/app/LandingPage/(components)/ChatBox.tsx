@@ -1,22 +1,29 @@
 "use client";
-import { collection, getDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import React from "react";
 import { db } from "@/app/(firebase)/firebase";
 import { AuthContext } from "@/app/(firebase)/AuthContext";
+import Image from "next/image";
 
 const SentMessage = ({ message }: { message: string }) => {
   return (
-    <div className="flex justify-end h-fit">
-      <div className="bg-gray-950 p-4 rounded-lg">
+    <div className="flex justify-end items-center gap-1">
+      <div className="bg-gray-950 px-3 p-2 rounded-lg">
         <p className="text-gray-600">{message}</p>
+      </div>
+      <div className="h-full aspect-square rounded-full overflow-hidden relative">
+        <Image src={'/images/no-profile-picture-icon.svg'} alt="some picture" fill={true}></Image>
       </div>
     </div>
   );
 };
 const ReceivedMessage = ({ message }: { message: string }) => {
   return (
-    <div className="flex justify-start h-fit">
-      <div className="bg-gray-950 p-4 rounded-lg">
+    <div className="flex justify-start items-center h-fit gap-1">
+      <div className="h-full aspect-square rounded-full overflow-hidden relative">
+        <Image src={'/images/no-profile-picture-icon.svg'} alt="some picture" fill={true}></Image>
+      </div>
+      <div className="bg-gray-950 px-3 p-2 rounded-lg">
         <p className="text-gray-600">{message}</p>
       </div>
     </div>

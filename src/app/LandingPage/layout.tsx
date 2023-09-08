@@ -5,7 +5,7 @@ function layout({children} : {children: React.ReactNode}) {
 
   return (
     <div className='flex w-screen overflow-hidden relative'>
-        {children}
+        {children} 
     </div>
   )
 }

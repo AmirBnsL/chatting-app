@@ -13,7 +13,7 @@ import ChatInput from "./(components)/ChatInput";
 export const CurrentChatContext = createContext({});
 
 function LandingPage() {
-  const [currentChat, setCurrentChat] = useState<any>(null);
+  const [currentChat, setCurrentChat] = useState<any>(null);//current selected contact item
   const user = useAuthContext();
   const router = useRouter();
 
@@ -32,10 +32,10 @@ function LandingPage() {
     <>
       <CurrentChatContext.Provider value={{ currentChat, setCurrentChat }}>
         <SideBar></SideBar>
-      <div className="basis-3/4 grow bg-MondayBlue flex items-center justify-around flex-col h-screen">
+      <div className="grow bg-pale_azure-700 flex items-center justify-around flex-col h-screen">
         {currentChat && (
           <>
-            <NavBar name={currentChat.name} imgSrc={currentChat.photo}></NavBar>
+            <NavBar name={currentChat.name} imgSrc={'/images/profile.png'}></NavBar>
             <ChatBox />
             <ChatInput />
           </>
