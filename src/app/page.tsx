@@ -1,96 +1,146 @@
 "use client";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
-import signUp, {signUpWithGoogle } from "./(firebase)/signup";
+import { useState } from "react";
+import signUp, { signUpWithGoogle } from "./(firebase)/signup";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "./(firebase)/firebase";
 import { updateProfile } from "firebase/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+
+const schema = z.object({
+  name: z.string().nonempty({ message: "Username required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+});
+
 export default function SignUp() {
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-    name: "",
-  });
   const router = useRouter();
-  const handleForm = async (event: FormEvent) => {
-    event.preventDefault();
+  const { formState, register, handleSubmit } = useForm({
+    resolver: zodResolver(schema),
+  });
+  const [firebaseError, setFirebaseError] = useState<String>('');
 
-    const { result, error } = await signUp(input.email, input.password);
+  const { errors } = formState;
 
+
+  const handleForm = async (formValues) => {
+    const { name, email, password } = formValues;
+    const { result, error } = await signUp(email, password);
     if (error) {
-      return console.log(error);
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          return setFirebaseError("Email already in use");
+        case "auth/invalid-email":
+          return setFirebaseError("Invalid email");
+        case "auth/weak-password":
+          return setFirebaseError("Password must be at least 8 characters");
+          default:
+          }
+          return;
+        }
+        
+        const { user } = result;
+        try {
+      await updateProfile(user.auth.currentUser, {
+        displayName: name,
+      });
+
+      await setDoc(doc(db, "/users", user.email), {
+        name: user.displayName,
+        email: user.email,
+        friends: [],
+      });
+
+      router.push("/LandingPage");
+    } catch (updateError) {
+      console.error("Error updating profile:", updateError);
     }
 
-    await updateProfile(result.user.auth.currentUser, {
-      displayName: input.name,
-    }).then(() => {
-        setDoc(doc(db, "/users", result.user.email), {
-        name: result.user.displayName,
-        email: result.user.email,
-        friends: [],
-      });    
-      router.push("/LandingPage");
-
-    });
- 
     // else successful
     console.log(result);
-/*      router.push("/LandingPage");
- */  };
+    router.push("/LandingPage");
+  };
   const handleGoogle = async () => {
-    const {result,error} = await signUpWithGoogle();
+    const { result, error } = await signUpWithGoogle();
     if (error) {
-      return console.log(error);
+      return console.log(error.code);
     }
-    console.log('result',result);
-    await setDoc(doc(db, "/users", result.email), {
+    console.log("result", result);
+    const { email } = result;
+    await setDoc(doc(db, "/users", email), {
       name: result.displayName,
-      email: input.email,
+      email: email,
       friends: [],
     });
     router.push("/LandingPage");
+  };
 
-
-  }
   return (
     <div className="h-screen w-screen flex  flex-col justify-center items-center text-black gap-10">
       <h1 className="text-3xl text-bold text-black">Create Your Account</h1>
       <div className="flex-col bg-white flex justify-center items-center  ">
-        <div onClick={handleGoogle} className=" px-6 py-2 mb-4 text-2xl flex justify-center items-center gap-2 border-2 border-blue-500 rounded-lg shadow-sm ">Sign up with <Image src={'/images/numerosogral.png'} width={20} height={20} alt={'google'}></Image></div>
+        <div
+          onClick={handleGoogle}
+          className=" px-6 py-2 mb-4 text-2xl flex justify-center items-center gap-2 border-2 border-blue-500 rounded-lg shadow-sm "
+        >
+          Sign up with{" "}
+          <Image
+            src={"/images/numerosogral.png"}
+            width={20}
+            height={20}
+            alt={"google"}
+          ></Image>
+        </div>
         <form
           className=" flex justify-center items-center flex-col gap-10 "
-          onSubmit={handleForm}
+          onSubmit={handleSubmit(handleForm)}
         >
           <div className="flex justify-between items-center gap-4">
-            <input
-              type="name"
-              className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500"
-              placeholder="Username"
-              onChange={(e) => {
-                setInput({ ...input, name: e.target.value });
-              }}
-            />
-            <input
-              type="password"
-              className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500"
-              placeholder="Password"
-              onChange={(e) => {
-                setInput({ ...input, password: e.target.value });
-              }}
-            />
-          </div>
+            <div className="relative">
               <input
-                type="email"
-                className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500 relative  " 
-                placeholder="E-mail"
-                onChange={(e) => {
-                  setInput({ ...input, email: e.target.value });
-                }}
+                className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500"
+                placeholder="Username"
+                {...register("name")}
               />
+              <div className={`absolute text-sm text-red-600 font-semibold `}>
+                {errors.name?.message}
+              </div>
+            </div>
+            <div className="relative">
+              <input
+                type="password"
+                className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500"
+                placeholder="Password"
+                {...register("password")}
+              />
+              <div
+                className={`absolute text-red-600 text-sm font-semibold w-fit `}
+              >
+                {errors.password?.message }
+              </div>
+            </div>
+          </div>
+          <div className="Relative">
+            <input
+              className="py-3 px-4 rounded-md border-2 border-gray-600 basis-1/3 hover:border-blue-500 focus:outline-none focus:border-blue-500 relative  "
+              placeholder="E-mail"
+              {...register("email")}
+            />
+            <div
+              className={`
+              absolute text-sm text-red-600 font-semibold `}
+            >
+              {errors.email?.message || firebaseError}
+            </div>
+          </div>
           <input
-            className="py-2 px-4 rounded w-fit bg-blue-600 text-white"
+            className="py-2 px-4 rounded w-fit bg-blue-600 text-white active:scale-90"
             type="submit"
             value="Sign Up"
           />

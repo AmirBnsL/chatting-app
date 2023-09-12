@@ -39,7 +39,7 @@ function SearchBar({
       {<input
         type="text"
         placeholder="search for contact"
-        className={` text-gray-950 focus:outline-none rounded-2xl bg-gray-100 placeholder:text-gray-400 ${searchOpen ? " p-2" : "w-0 p-0"} transition-['width'] duration-500 `}
+        className={` text-gray-950 focus:outline-none rounded-2xl bg-gray-100 placeholder:text-gray-400 ${searchOpen ? " p-2" : "w-0 p-0"} transition-all duration-150 `}
         value={searchValue}
         onChange={handleSearch}
       />}
