@@ -5,7 +5,7 @@ import AddContact from './(components)/AddContact';
 import { DocumentData } from 'firebase/firestore';
 
 interface AddingElementProps {
-    dbUsers: DocumentData[];
+    dbUsers: DocumentData;
     contacts: DocumentData[];
     setContacts: React.Dispatch<React.SetStateAction<DocumentData[]>>;
 }

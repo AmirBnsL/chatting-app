@@ -17,7 +17,7 @@ export default function AddContact({
   const [searchedContact, setSearchedContact] = React.useState("");
   const currentUser = React.useContext(AuthContext);
 
-  const HandleSubmit = async (e) => {
+  const HandleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     function makeSureUnique(arr: Array<any>) {
       const uniqueArr:Array<any> = [];
