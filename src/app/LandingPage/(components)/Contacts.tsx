@@ -1,7 +1,8 @@
 import React from 'react';
 import ContactItem from './ContactItem';
+import { DocumentData } from 'firebase/firestore';
 
-function Contacts({contacts}) {
+function Contacts({contacts}: {contacts: DocumentData[]}) {
   return (
     <>
      {contacts.map((contact, index) => (

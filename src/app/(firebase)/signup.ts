@@ -1,16 +1,17 @@
+import { FirebaseError } from "firebase/app";
 import app from "./firebase";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { User, UserCredential, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { signInWithPopup,GoogleAuthProvider } from "firebase/auth";
 
 const auth = getAuth(app);
 
 
-export default async function signUp(email, password) {
-    let result = null,
-        error = null;
+export default async function signUp(email:string, password:string) {
+    let result:UserCredential | null = null,
+        error:FirebaseError | null = null;
     try {
         result = await createUserWithEmailAndPassword(auth, email, password);
-    } catch (e) {
+    } catch (e:any) {
         error = e;
     }
 
@@ -18,17 +19,15 @@ export default async function signUp(email, password) {
 }
 export async function signUpWithGoogle() {
     const provider = new GoogleAuthProvider();
-    let result = null,
-        error = null;
-    
+    let result : User = {} as User;
+    let error:FirebaseError | null = null;
+    try {
          await signInWithPopup(auth, provider).then((response) => {
-            const credential = GoogleAuthProvider.credentialFromResult(response);
-            const token = credential.accessToken;
-            const user = response.user;
-            result = user;
-        }).catch((err) => {
+            result = response.user;
+        })
+    } catch(err:any) {
             error = err;    
-        });
+        };
    
 
     return { result, error };

@@ -1,19 +1,23 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { ChangeEvent, FormEvent, HtmlHTMLAttributes, use, useEffect } from "react";
 import { db } from "@/app/(firebase)/firebase";
-import { setDoc, collection, addDoc } from "firebase/firestore";
+import { setDoc, collection, addDoc, DocumentData } from "firebase/firestore";
 import { AuthContext } from "@/app/(firebase)/AuthContext";
 import { CurrentChatContext } from "../page";
+
+
 
 function ChatInput() {
   const [message, setMessage] = React.useState("");
   const currentUser = React.useContext(AuthContext);
   const {currentChat,setCurrentChat} = React.useContext(CurrentChatContext);
   useEffect(() => {console.log('currentCHat',currentChat)}, [currentChat])
-  const HandleChange = (e) => {
+  //q: how do i get the type of the event object in typescript
+
+  const HandleChange = (e:React.ChangeEvent<HTMLInputElement> ) => {
     setMessage(e.target.value);
   };
-  const HandleSubmit = (e) => {
+  const HandleSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     console.log(message);
     console.log('current',currentChat)
@@ -21,8 +25,8 @@ function ChatInput() {
     addDoc(colRef, {
       message: message,
       timestamp: Date.now(),
-      from: currentUser.user.email,
-      to: currentChat.email
+      from: currentUser?.user?.email,
+      to: currentChat?.email
     });
     setMessage("");
     e.target.value="";

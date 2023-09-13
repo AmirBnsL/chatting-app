@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "./(firebase)/firebase";
-import { updateProfile } from "firebase/auth";
-import { useForm } from "react-hook-form";
+import {  updateProfile } from "firebase/auth";
+import {  useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
@@ -19,6 +19,12 @@ const schema = z.object({
     .min(8, { message: "Password must be at least 8 characters" }),
 });
 
+interface formValues {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export default function SignUp() {
   const router = useRouter();
   const { formState, register, handleSubmit } = useForm({
@@ -29,9 +35,9 @@ export default function SignUp() {
   const { errors } = formState;
 
 
-  const handleForm = async (formValues) => {
+  const handleForm = async (formValues:FieldValue) => {
     const { name, email, password } = formValues;
-    const { result, error } = await signUp(email, password);
+    const { result, error} = await signUp(email, password);
     if (error) {
       switch (error.code) {
         case "auth/email-already-in-use":
@@ -73,11 +79,19 @@ export default function SignUp() {
     }
     console.log("result", result);
     const { email } = result;
-    await setDoc(doc(db, "/users", email), {
-      name: result.displayName,
-      email: email,
-      friends: [],
-    });
+    const docRef = 
+    doc(db, "/users", email);
+    try {
+      await setDoc(docRef, {
+        name: result.displayName,
+        email: email,
+        friends: [],
+      });
+    }
+    catch (error) {
+      console.log(error) 
+    }
+
     router.push("/LandingPage");
   };
 

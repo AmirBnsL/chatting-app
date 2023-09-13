@@ -31,7 +31,7 @@ function SearchBar({
       <div
         className="relative min-w-[2rem] min-h-[2rem] "
         onClick={() => {
-          setIsOpen((prevOpen) => !prevOpen);
+          setIsOpen((prevOpen:boolean) => !prevOpen);
         }}
       >
         <Image src="/images/hamburger.png" fill={true} alt="Hamburger"></Image>

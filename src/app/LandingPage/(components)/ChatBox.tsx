@@ -1,5 +1,5 @@
 "use client";
-import { collection, onSnapshot } from "firebase/firestore";
+import { DocumentData, collection, onSnapshot } from "firebase/firestore";
 import React from "react";
 import { db } from "@/app/(firebase)/firebase";
 import { AuthContext } from "@/app/(firebase)/AuthContext";
@@ -31,7 +31,7 @@ const ReceivedMessage = ({ message }: { message: string }) => {
 };
 
 function ChatBox() {
-  const [messages, setMessages] = React.useState([]);
+  const [messages, setMessages] = React.useState<DocumentData[]>([]);
   React.useEffect(() => {
     /* const message = getDocs(collection(db, "chats")).then((querySnapshot) => {
       const messagesArr = querySnapshot.docs.map((doc) => doc.data());
@@ -41,7 +41,7 @@ function ChatBox() {
     }); */
     onSnapshot(collection(db, 'chats'),(snapshot)=> {
       const messagesArr = snapshot.docs.map((doc) => doc.data());
-      const filteredMessages = messagesArr.filter((message) => message.from === currentUser.user.email || message.to === currentUser.user.email);
+      const filteredMessages = messagesArr.filter((message) => message.from === currentUser.user?.email || message.to === currentUser.user?.email);
        filteredMessages.sort((a,b) => a.timestamp - b.timestamp);
  
   console.log("message", messagesArr);
@@ -58,7 +58,7 @@ function ChatBox() {
   return (
     <div className="flex grow gap-2 w-full flex-col overflow-scroll px-4">
       {messages.map((message,index) => {
-        if (message.from === currentUser.user.email) {
+        if (message.from === currentUser.user?.email) {
           return <SentMessage key={index} message={message.message} />;
         } else {
           return <ReceivedMessage key={index} message={message.message} />;

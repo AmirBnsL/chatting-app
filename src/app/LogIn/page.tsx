@@ -16,6 +16,7 @@ const schema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
 });
+
 function LogIn() {
   const Router = useRouter();
   const [firebaseError, setFirebaseError] = useState('');
@@ -24,7 +25,7 @@ function LogIn() {
   });
   const { errors } = formState;
 
-  const handleForm = async (formValues) => {
+  const handleForm = async (formValues: {email:string,password:string}) => {
     const { email, password } = formValues;
     const { result, error } = await signIn(email, password);
     if (error) {

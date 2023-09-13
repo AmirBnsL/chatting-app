@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect } from "react";
 import { db } from "@/app/(firebase)/firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, DocumentData } from "firebase/firestore";
 import { AuthContext } from "@/app/(firebase)/AuthContext";
 import SearchBar from "./(components)/SearchBar";
 import { getContacts } from "./contactFetch";
@@ -19,9 +19,9 @@ import HamburgerBar from "./HamburgerBar";
   */
 function SideBar() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [dbUsers, setDbUsers] = React.useState([]); //is the list of friends of the current user
+  const [dbUsers, setDbUsers] = React.useState<DocumentData>([]); //is the list of friends of the current user
   const [searchValue, setSearchValue] = React.useState("");
-  const [contacts, setContacts] = React.useState([]); //is the list of friends of the current user that is gonna
+  const [contacts, setContacts] = React.useState<DocumentData[]>([]); //is the list of friends of the current user that is gonna
   const [friendsArr, setFriendsArr] = React.useState([]); //is the list of friends of the current user that is gonna
   const [isLoading, setIsLoading] = React.useState(true);
   const currentUser = useContext(AuthContext); //it has currentUser.uid , currentUser.email , currentUser.displayName inside user object inside it
@@ -98,7 +98,7 @@ function SideBar() {
           isOpen ? "" : "translate-x-[-100%]"
         } transition-all duration-300`}
       >
-        <HamburgerBar setIsOpen={setIsOpen} isOpen={setIsOpen}></HamburgerBar>
+        <HamburgerBar setIsOpen={setIsOpen} isOpen={isOpen}></HamburgerBar>
       </div>
     </>
   );

@@ -19,8 +19,8 @@ export default function AddContact({
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
-    function makeSureUnique(arr: any) {
-      const uniqueArr = [];
+    function makeSureUnique(arr: Array<any>) {
+      const uniqueArr:Array<any> = [];
       arr.forEach((item: any) => {
         if (!uniqueArr.includes(item)) {
           uniqueArr.push(item);
@@ -35,13 +35,13 @@ export default function AddContact({
 
     const foundObject = dbUsers.find(
       (user: any) =>
-        user.email === searchedContact && user.email !== currentUser.user.email
+        user.email === searchedContact && user.email !== currentUser.user?.email
     );
     if (foundObject && !UniqueContact) {
       console.log("found");
       const updatedContacts = makeSureUnique([...contacts, foundObject]);
       setContacts(updatedContacts);
-      const docRef = doc(db, "users", currentUser.user.email);
+      const docRef = doc(db, "users", currentUser.user?.email);
       const docSnap = await getDoc(docRef);
 
 

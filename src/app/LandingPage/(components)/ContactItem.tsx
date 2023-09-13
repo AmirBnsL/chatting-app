@@ -2,8 +2,10 @@
 import React from "react";
 import { CurrentChatContext } from "../page";
 import Image from "next/image";
+import { DocumentData } from "@firebase/firestore";
 
-function ContactItem({ contact }) {
+
+function ContactItem({ contact }: { contact: DocumentData}) {
   const { currentChat, setCurrentChat } = React.useContext(CurrentChatContext);
   const isCurrentChat = currentChat?.name == contact?.name;
 

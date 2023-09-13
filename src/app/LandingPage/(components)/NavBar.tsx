@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+
 function NavBar({ name, imgSrc }: { name: string; imgSrc: string }) {
   return (
     <div className="flex justify-between p-4 items-center w-full bg-pale_azure-400">
