@@ -1,27 +1,22 @@
 "use client";
 import React from "react";
-
+import { useDispatch } from "react-redux";
 import Image from "next/image";
+import { setSearch } from "@/app/lib/redux/Features/search/searchSlice";
+import { RootState } from "@/app/lib/redux/store";
+import { useSelector } from "react-redux";
+import { toggleHamburger } from "@/app/lib/redux/Features/hamburger/hamburgerSlice";
 
-function SearchBar({
-  searchValue,
-  setSearchValue,
-  isOpen,
-  setIsOpen,
-}: {
-  searchValue: any;
-  setSearchValue: any;
-  isOpen: any;
-  setIsOpen: any;
-}) {
-
+function SearchBar() {
+  const dispatch = useDispatch();
+  const searchValue = useSelector((state:RootState) => state.search.value);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const handleSearch = (e: any) => {
-    setSearchValue(e.target.value);
+    dispatch(setSearch(e.target.value));
   };
 
   const handleCancel = () => {
-    setSearchValue("");
+    dispatch(setSearch(''));
   };
   //TODO: magnfier icon to expand the search bar
   //todo: change the red icon and hamburger to something  minimal with good color
@@ -31,7 +26,7 @@ function SearchBar({
       <div
         className="relative min-w-[2rem] min-h-[2rem] "
         onClick={() => {
-          setIsOpen((prevOpen:boolean) => !prevOpen);
+          dispatch(toggleHamburger());
         }}
       >
         <Image src="/images/hamburger.png" fill={true} alt="Hamburger"></Image>

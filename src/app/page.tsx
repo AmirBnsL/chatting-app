@@ -7,7 +7,7 @@ import Link from "next/link";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "./(firebase)/firebase";
 import {  updateProfile } from "firebase/auth";
-import {  useForm } from "react-hook-form";
+import {  FieldValue, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 

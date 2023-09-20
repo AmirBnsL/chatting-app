@@ -4,13 +4,8 @@ import AddButton from './(components)/AddButton';
 import AddContact from './(components)/AddContact';
 import { DocumentData } from 'firebase/firestore';
 
-interface AddingElementProps {
-    dbUsers: DocumentData;
-    contacts: DocumentData[];
-    setContacts: React.Dispatch<React.SetStateAction<DocumentData[]>>;
-}
 
-function AddingElement({dbUsers, contacts, setContacts}: AddingElementProps) {
+function AddingElement() {
     const [isAdding, setIsAdding] = React.useState(true);
 
   return (
@@ -19,9 +14,6 @@ function AddingElement({dbUsers, contacts, setContacts}: AddingElementProps) {
         <AddButton setIsAdding={setIsAdding}></AddButton>
       ) : (
         <AddContact
-          dbUsers={dbUsers}
-          contacts={contacts}
-          setContacts={setContacts}
         ></AddContact>
       )}
     </>

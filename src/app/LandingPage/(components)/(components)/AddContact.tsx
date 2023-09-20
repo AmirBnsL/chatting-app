@@ -1,47 +1,42 @@
 "use client";
 import React from "react";
 
-import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, DocumentData } from "firebase/firestore";
 import { db } from "@/app/(firebase)/firebase";
-import { AuthContext } from "@/app/(firebase)/AuthContext";
+import { useSelector,useDispatch } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
+import { setContacts } from "@/app/lib/redux/Features/contacts/contactsSlice";
 
-export default function AddContact({
-  dbUsers,
-  contacts,
-  setContacts,
-}: {
-  dbUsers: any;
-  contacts: any;
-  setContacts: any;
-}) {
+export default function AddContact() {
+  const contacts = useSelector((state: RootState) => state.contacts.contacts);
+  const dbUsers = useSelector((state: RootState) => state.contacts.dbUsers);
+  const dispatch = useDispatch();
   const [searchedContact, setSearchedContact] = React.useState("");
-  const currentUser = React.useContext(AuthContext);
+  const currentUser = useSelector((state: RootState) => state.context.user);
+  console.log('DbUsers',dbUsers)
 
   const HandleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     function makeSureUnique(arr: Array<any>) {
-      const uniqueArr:Array<any> = [];
-      arr.forEach((item: any) => {
-        if (!uniqueArr.includes(item)) {
-          uniqueArr.push(item);
-        }
-        return uniqueArr;
-      });
+      return [...new Set(arr)]
     }
     console.log(contacts)
-    const UniqueContact = contacts.find(
-      (contact: any) => contact.email === searchedContact
-    );
+    const isContactUnique = !contacts.some((contact) => contact.name === searchedContact);
+    console.log(isContactUnique);
 
-    const foundObject = dbUsers.find(
-      (user: any) =>
-        user.email === searchedContact && user.email !== currentUser.user?.email
+
+    const foundObject  = dbUsers?.find(
+      (user : DocumentData) =>{
+        return user.name === searchedContact && user.name !== currentUser?.displayName
+
+      }
     );
-    if (foundObject && !UniqueContact) {
+    console.log(foundObject);
+    if (foundObject && isContactUnique) {
       console.log("found");
       const updatedContacts = makeSureUnique([...contacts, foundObject]);
-      setContacts(updatedContacts);
-      const docRef = doc(db, "users", currentUser.user?.email);
+      dispatch(setContacts(updatedContacts));
+      const docRef = doc(db, "users", currentUser?.email);
       const docSnap = await getDoc(docRef);
 
 

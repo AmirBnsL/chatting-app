@@ -1,17 +1,21 @@
 "use client";
 import React from "react";
-import { CurrentChatContext } from "../page";
 import Image from "next/image";
 import { DocumentData } from "@firebase/firestore";
-
+import { useSelector,useDispatch } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
+import { setCurrentUser } from "@/app/lib/redux/Features/context/contextSlice";
 
 function ContactItem({ contact }: { contact: DocumentData}) {
-  const { currentChat, setCurrentChat } = React.useContext(CurrentChatContext);
+  const currentChat = useSelector((state:RootState) => state.context.currentChat);
+  const dispatch = useDispatch();
+
+
   const isCurrentChat = currentChat?.name == contact?.name;
 
   const HandleClick = () => {
     console.log(isCurrentChat)
-    !isCurrentChat ? setCurrentChat(contact) : setCurrentChat(null);
+    !isCurrentChat ? dispatch(setCurrentUser(contact)) : dispatch(setCurrentUser(null));
   };
   React.useEffect(() => {console.log('current chat',currentChat);}, [currentChat])
   return (

@@ -2,14 +2,14 @@
 import React, { ChangeEvent, FormEvent, HtmlHTMLAttributes, use, useEffect } from "react";
 import { db } from "@/app/(firebase)/firebase";
 import { setDoc, collection, addDoc, DocumentData } from "firebase/firestore";
-import { AuthContext } from "@/app/(firebase)/AuthContext";
 import { CurrentChatContext } from "../page";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
 
 
 function ChatInput() {
   const [message, setMessage] = React.useState("");
-  const currentUser = React.useContext(AuthContext);
+  const currentUser = useSelector((state:RootState)=> state.context.user); //it has currentUser.uid , currentUser.email , currentUser.displayName inside user object inside it
   const {currentChat,setCurrentChat} = React.useContext(CurrentChatContext);
   useEffect(() => {console.log('currentCHat',currentChat)}, [currentChat])
   //q: how do i get the type of the event object in typescript
@@ -25,7 +25,7 @@ function ChatInput() {
     addDoc(colRef, {
       message: message,
       timestamp: Date.now(),
-      from: currentUser?.user?.email,
+      from: currentUser?.email,
       to: currentChat?.email
     });
     setMessage("");

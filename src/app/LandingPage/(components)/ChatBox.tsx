@@ -2,8 +2,9 @@
 import { DocumentData, collection, onSnapshot } from "firebase/firestore";
 import React from "react";
 import { db } from "@/app/(firebase)/firebase";
-import { AuthContext } from "@/app/(firebase)/AuthContext";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
 
 const SentMessage = ({ message }: { message: string }) => {
   return (
@@ -49,7 +50,7 @@ function ChatBox() {
     })
   }, []);
 
-  const currentUser = React.useContext(AuthContext);
+  const currentUser = useSelector((state:RootState)=> state.context.user); //it has currentUser.uid , currentUser.email , currentUser.displayName inside user object inside it
 
   React.useEffect(() => {
     console.log("messages", messages);
@@ -58,7 +59,7 @@ function ChatBox() {
   return (
     <div className="flex grow gap-2 w-full flex-col overflow-scroll px-4">
       {messages.map((message,index) => {
-        if (message.from === currentUser.user?.email) {
+        if (message.from === currentUser?.email) {
           return <SentMessage key={index} message={message.message} />;
         } else {
           return <ReceivedMessage key={index} message={message.message} />;
