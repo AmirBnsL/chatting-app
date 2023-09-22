@@ -5,7 +5,7 @@ import { DocumentData } from "firebase/firestore";
 interface contactsState {
   contacts: DocumentData[]; //show contacts
   dbUsers: DocumentData[] | null; //all firebase store users
-  friendArr: DocumentData[]; //friendslist
+  friendArr: Array<String>; //friendslist
 }
 
 const initialState: contactsState = {
@@ -17,7 +17,7 @@ interface friendArrPayload {
   type: string;
 
   payload: {
-    dbUsers: DocumentData[] | null;
+    fetchedDB: DocumentData[] | null;
     currentUser: SerializedUser | null;
   };
 }
@@ -33,12 +33,10 @@ export const contactsSlice = createSlice({
       state.dbUsers = action.payload;
     },
     setFriendArr: (state, action: friendArrPayload) => {
-      /*  const fetchedCurrentUser = fetchedUsers.filter(
-                (user) => user.name == currentUser?.displayName
-                ); */
       state.friendArr = action.payload.dbUsers?.filter((user: DocumentData) => {
         return user.name == action.payload.currentUser?.displayName;
       })[0].friends;
+    
     },
   },
 });

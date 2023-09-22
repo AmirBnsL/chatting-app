@@ -24,7 +24,7 @@ export const contextSlice = createSlice({
         }
         ,
         setCurrentUser: (state, action) => {
-            state.user = action.payload;
+            state.currentChat = action.payload;
         }
     }
 });

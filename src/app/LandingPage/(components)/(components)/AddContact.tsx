@@ -13,7 +13,6 @@ export default function AddContact() {
   const dispatch = useDispatch();
   const [searchedContact, setSearchedContact] = React.useState("");
   const currentUser = useSelector((state: RootState) => state.context.user);
-  console.log('DbUsers',dbUsers)
 
   const HandleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,13 +42,13 @@ export default function AddContact() {
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        const updatedFriends = [...userData.friends, foundObject.email];
+        console.log({userData})
+        const updatedFriends = [...userData.friends, foundObject.name];
         await updateDoc(docRef, { friends: updatedFriends });
       } else {
         console.log("No such document!");
         ``;
       }
-      console.log(docSnap.data());
     } else {
       console.log("fuck you");
     }

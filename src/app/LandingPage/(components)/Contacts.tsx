@@ -1,56 +1,89 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import ContactItem from "./ContactItem";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/lib/redux/store";
 import { useDispatch } from "react-redux";
-import { setContacts, setDbusers, setFriendArr } from "@/app/lib/redux/Features/contacts/contactsSlice";
-import {db} from "@/app/(firebase)/firebase";
-import { DocumentData, doc, getDoc } from "firebase/firestore";
+
+import {
+  setContacts,
+  setDbusers,
+  setFriendArr,
+} from "@/app/lib/redux/Features/contacts/contactsSlice";
+import { db } from "@/app/(firebase)/firebase";
+import { DocumentData, collection, getDocs, query,where, } from "firebase/firestore";
 
 
-function Contacts({fetchedDB}:{fetchedDB:DocumentData[]}) {
-  
+async function getDocFromName(name: string) {
+        const q = query(collection(db,'users'),where('name','==',name));
+        const docSnap = await getDocs(q);
+        if (docSnap.empty) { console.log("No such  document!");
+        return 
+        
+        } else {
+          // doc.data() will be undefined in this case
+          return docSnap.docs[0].data();
+        }
+      }
+
+
+
+
+
+
+function Contacts({ fetchedDB }: { fetchedDB: DocumentData[] | null}) {
   const contacts = useSelector((state: RootState) => state.contacts.contacts);
-  const friendsArr = useSelector((state: RootState) => state.contacts.friendArr);
+  const friendsArr = useSelector(
+    (state: RootState) => state.contacts.friendArr
+  );
   const dbUsers = useSelector((state: RootState) => state.contacts.dbUsers);
   const currentUser = useSelector((state: RootState) => state.context.user);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
+    
+  
+  const fillFromfbDocs =async (friendsArr:Array<string>) => {
+    const newContacts: DocumentData[] = [];
+      for (const friend of friendsArr) {
+        const friendDoc = await getDocFromName(friend);
+        console.log({friendDoc}) //undefined
+        friendDoc && newContacts.push(friendDoc);
+      }
+    return newContacts;
+    }
+  
+
+  const updateContacts = async (friendArr:Array<string>) => {
+    const newContacts = await fillFromfbDocs(friendArr); 
+    console.log({newContacts})
+    dispatch(setContacts(newContacts));
+  };
+
   useEffect(() => {
     dispatch(setDbusers(fetchedDB));
     //fill contacts with friendsArr that is searched in firebase firestore call this inside contacts component and share with other components
-   
-  }, [dbUsers]);
-  useEffect(() => {
+  }, []);
+  useEffect(() => {    
     if (!dbUsers) return;
-     dispatch(setFriendArr({dbUsers,currentUser}));
-    console.log(friendsArr);
-    if (friendsArr.length == 0) return;
-      const newContacts:DocumentData[] = [];
-      (async () => {
-        for (const friend of friendsArr) {
-          const docRef = doc(db, "users", friend);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            newContacts.push(docSnap.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        }
-        dispatch(setContacts(newContacts));
-      });
-  } , [ dbUsers]); 
-  const searchText = useSelector(
-    (state: RootState) => state.search.searchText
-  );
-  const searchedContacts = contacts.filter((contact) => {
-    return contact.name.toLowerCase().includes(searchText.toLowerCase());
-  });
+    const newFriendsArr = fetchedDB?.filter((user: DocumentData) => {
+      return user.name == currentUser?.displayName;
+    })[0].friends
+    console.log({newFriendsArr});
+    updateContacts(newFriendsArr);
+    console.log(contacts)
+    } 
+  , [dbUsers]);
 
+
+
+  const searchText = useSelector((state: RootState) => state.search.searchText);
+  
+  const searchedContacts = contacts?.filter((contact) => {
+    return contact.name.toLowerCase().includes(searchText.toLowerCase());
+
+  })
   return (
     <>
-      {searchedContacts.map((contact, index) => (
+      {searchedContacts?.map((contact, index) => (
         <ContactItem contact={contact} key={index}></ContactItem>
       ))}
     </>

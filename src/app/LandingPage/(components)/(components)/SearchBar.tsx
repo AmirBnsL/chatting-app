@@ -9,7 +9,7 @@ import { toggleHamburger } from "@/app/lib/redux/Features/hamburger/hamburgerSli
 
 function SearchBar() {
   const dispatch = useDispatch();
-  const searchValue = useSelector((state:RootState) => state.search.value);
+  const searchValue = useSelector((state:RootState) => state.search.searchText);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const handleSearch = (e: any) => {
     dispatch(setSearch(e.target.value));

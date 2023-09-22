@@ -1,12 +1,15 @@
 import SideBar from "./(components)/SideBar";
 import LandingPage from "./page";
+import KickOutRouter from "./kickOutRouter";
 
 function layout() {
   return (
     <div className="flex w-screen overflow-hidden relative">
-      <LandingPage>
-        <SideBar></SideBar>{" "}
-      </LandingPage>
+      <KickOutRouter>
+        <LandingPage>
+          <SideBar></SideBar>{" "}
+        </LandingPage>
+      </KickOutRouter>
     </div>
   );
 }

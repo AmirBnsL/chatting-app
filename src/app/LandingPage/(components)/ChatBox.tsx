@@ -33,19 +33,17 @@ const ReceivedMessage = ({ message }: { message: string }) => {
 
 function ChatBox() {
   const [messages, setMessages] = React.useState<DocumentData[]>([]);
+  const currentChat = useSelector((state:RootState)=> state.context.currentChat); 
+
   React.useEffect(() => {
-    /* const message = getDocs(collection(db, "chats")).then((querySnapshot) => {
-      const messagesArr = querySnapshot.docs.map((doc) => doc.data());
-      console.log("message", messagesArr);
-      messagesArr.map
-      setMessages(messagesArr);
-    }); */
+
     onSnapshot(collection(db, 'chats'),(snapshot)=> {
       const messagesArr = snapshot.docs.map((doc) => doc.data());
-      const filteredMessages = messagesArr.filter((message) => message.from === currentUser.user?.email || message.to === currentUser.user?.email);
+      console.log({messagesArr});
+      console.log({currentUser});
+      const filteredMessages = messagesArr.filter((message) => message.from === currentChat?.email && message.to === currentUser?.email || message.from === currentUser?.email && message.to === currentChat?.email);
        filteredMessages.sort((a,b) => a.timestamp - b.timestamp);
- 
-  console.log("message", messagesArr);
+ console.log({filteredMessages})
       setMessages(filteredMessages);
     })
   }, []);

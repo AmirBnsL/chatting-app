@@ -3,13 +3,13 @@ import SearchBar from "./(components)/SearchBar";
 import Contacts from "./Contacts";
 import AddingElement from "./AddingElement";
 import HamburgerOpener from "./HamburgerOpener";
-import { getContacts } from "./contactFetch";
+import { getAllFbUser } from "./contactFetch";
 import { db } from "@/app/(firebase)/firebase";
 
 
 async function getDBusers(){
   
-  const fetchedDB = await getContacts(db);
+  const fetchedDB = await getAllFbUser(db);
 
   return fetchedDB[0]
   
@@ -19,7 +19,6 @@ getDBusers()
 
 async function SideBar() {
   const fetchedDB = await getDBusers();
-
   return (
     <>
       <div
