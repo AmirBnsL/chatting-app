@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import signUp, { signUpWithGoogle } from "./(firebase)/signup";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -72,7 +72,7 @@ export default function SignUp() {
     console.log(result);
     router.push("/LandingPage");
   };
-  const handleGoogle = async () => {
+  const handleGoogle = useCallback(async () => {
     const { result, error } = await signUpWithGoogle();
     if (error) {
       return console.log(error.code);
@@ -93,7 +93,7 @@ export default function SignUp() {
     }
 
     router.push("/LandingPage");
-  };
+  },[router])
 
   return (
     <div className="h-screen w-screen flex  flex-col justify-center items-center text-black gap-10">
