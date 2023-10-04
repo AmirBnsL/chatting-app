@@ -1,13 +1,17 @@
+import SideBar from "./(components)/SideBar";
+import LandingPage from "./page";
+import KickOutRouter from "./kickOutRouter";
 
-import React from 'react'
-
-function layout({children} : {children: React.ReactNode}) {
-
+function layout() {
   return (
-    <div className='flex w-screen overflow-hidden relative'>
-        {children} 
+    <div className="flex w-screen overflow-hidden relative">
+      <KickOutRouter>
+        <LandingPage>
+          <SideBar></SideBar>{" "}
+        </LandingPage>
+      </KickOutRouter>
     </div>
-  )
+  );
 }
 
-export default layout
+export default layout;

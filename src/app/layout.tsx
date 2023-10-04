@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from 'next/font/google';
-import { AuthContextProvider } from "./(firebase)/AuthContext";
-
+import { AuthProvider } from "./(firebase)/AuthContext";
+import Providers from "./Providers";
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -14,9 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className}>
+      <Providers>
       <body className="text-white">
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
+      </Providers>
     </html>
   );
 }

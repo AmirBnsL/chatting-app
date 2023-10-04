@@ -1,6 +1,12 @@
-import React, { ReactNode } from "react";
+
+
+import React, { FormEvent, ReactNode } from "react";
 import Image from "next/image";
-import { JsxElement } from "typescript";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
+import { toggleHamburger } from "@/app/lib/redux/Features/hamburger/hamburgerSlice";
+import { signOut } from "firebase/auth";
+import { authInstance } from "@/app/(firebase)/AuthContext";
 
 function Profile() {
   return (
@@ -51,13 +57,19 @@ const DropDownMenu = ({ children }: { children: ReactNode }) => {
   return <>{children}</>;
 };
 
-function HamburgerBar({
-  setIsOpen,
-  isOpen,
-}: {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean;
-}) {
+function HamburgerBar() {
+  const isOpen = useSelector((state: RootState) => state.hamburger.isOpen);
+  const dispatch = useDispatch();
+
+
+  const HandleLogOut = (e: FormEvent) => {
+    e.preventDefault();
+    signOut(authInstance);
+  };
+
+
+
+
   return (
     <>
       <div className="w-full flex flex-col justify-center bg-blue-900">
@@ -66,7 +78,7 @@ function HamburgerBar({
             isOpen ? "" : "hidden"
           }`}
           onClick={() => {
-            setIsOpen((prevOpen) => !prevOpen);
+            dispatch(toggleHamburger());
           }}
         >
           <Image
@@ -78,13 +90,6 @@ function HamburgerBar({
         <Profile></Profile>
       </div>
       <div className="w-full h-full">
-        //TODO: add the settings menu //TODO: add the profile menu which has
-        change username, change password, change email,and freinds and from
-        there you logOut //TODO: add the notification menu which you can change
-        there type of notification //TODO: add the darkmode menu which you can
-        change the theme of the app //TODO: use a chlidren prop and
-        cssTransition to make the menu appear and disappear through translate
-        and opacity
         <MenuItem
           title={<h1 className="text-gray-100 font-bold text-xl">Settings</h1>}
           imgSrc={"/images/settings.png"}
@@ -114,6 +119,7 @@ function HamburgerBar({
             }
             imgSrc={"/images/darkmode.png"}
           ></MenuItem>
+          <div className='text-gray-100 font-semibold text-lg w-10/12' onClick={HandleLogOut}>LogOut</div>
         </div>
       </div>
     </>

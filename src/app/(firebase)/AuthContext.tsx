@@ -3,34 +3,42 @@ import React, { ReactNode } from "react";
 import { User, getAuth } from "firebase/auth";
 import app from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUser } from "../lib/redux/Features/context/contextSlice";
 
 export const authInstance = getAuth(app);
 
-interface AuthContextType {
-    user: User | null;
+export interface SerializedUser {
+    uid: string | null,
+    email: string | null,
+    displayName: string | null,
+    photoURL: string | null,
 }
-export const AuthContext = React.createContext<AuthContextType>({} as AuthContextType);
 
-export const useAuthContext = () => React.useContext(AuthContext);
 
-export const AuthContextProvider = ({ children }:{children:ReactNode}) => {
-
-    const [user, setUser] = React.useState<User | null >(null);
+export const AuthProvider = ({ children }:{children:ReactNode}) => {
+    const dispatch = useDispatch();
     const [loading, setLoading] = React.useState(true); 
 
     React.useEffect(() => {
         const unsubscribe =onAuthStateChanged(authInstance, (user) => {
-            if (user) {setUser(user);}
-            else {setUser(null);}
+            console.log({user})
+             const serialziedUser : SerializedUser | null =
+            user && {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+            }
+         dispatch(setUser(serialziedUser));
             setLoading(false);
         });
         return unsubscribe;
-    }, []);
+    },[]);
 
     return (
-        <AuthContext.Provider value={{ user}}>
-            {!loading && children}
-        </AuthContext.Provider> 
+        <>
+        {!loading && children}</>
         )
 
 }

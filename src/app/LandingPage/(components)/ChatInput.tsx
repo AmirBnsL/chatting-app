@@ -1,16 +1,15 @@
 "use client";
-import React, { ChangeEvent, FormEvent, HtmlHTMLAttributes, use, useEffect } from "react";
+import React, {  useEffect } from "react";
 import { db } from "@/app/(firebase)/firebase";
-import { setDoc, collection, addDoc, DocumentData } from "firebase/firestore";
-import { AuthContext } from "@/app/(firebase)/AuthContext";
-import { CurrentChatContext } from "../page";
-
+import { collection, addDoc} from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/lib/redux/store";
 
 
 function ChatInput() {
   const [message, setMessage] = React.useState("");
-  const currentUser = React.useContext(AuthContext);
-  const {currentChat,setCurrentChat} = React.useContext(CurrentChatContext);
+  const currentUser = useSelector((state:RootState)=> state.context.user); //it has currentUser.uid , currentUser.email , currentUser.displayName inside user object inside it
+  const currentChat = useSelector((state:RootState)=> state.context.currentChat); //it has currentUser.uid , currentUser.email , currentUser.displayName inside user object inside it))
   useEffect(() => {console.log('currentCHat',currentChat)}, [currentChat])
   //q: how do i get the type of the event object in typescript
 
@@ -19,17 +18,14 @@ function ChatInput() {
   };
   const HandleSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    console.log(message);
-    console.log('current',currentChat)
     const colRef = collection(db, "chats");
     addDoc(colRef, {
       message: message,
       timestamp: Date.now(),
-      from: currentUser?.user?.email,
+      from: currentUser?.email,
       to: currentChat?.email
     });
     setMessage("");
-    e.target.value="";
   };
   return (
     <form
@@ -41,6 +37,7 @@ function ChatInput() {
         placeholder="Type message"
         className="grow p-4 rounded-lg bg-gray-950 placeholder:text-gray-600"
         onChange={HandleChange}
+        value={message}
       ></input>
       <button  onClick={HandleSubmit}>
         <img src="/images/paper-plane.svg" className="w-8 h-8 "></img>

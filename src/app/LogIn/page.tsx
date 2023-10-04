@@ -109,7 +109,7 @@ function LogIn() {
             className="py-2 px-4 rounded bg-white w-fit hover:outline-2 outline-black"
             href={"/"}
           >
-            Don't have an account? Sign up.
+            Don&apos;t have an account? Sign up.
           </Link>
         </form>
       </div>
