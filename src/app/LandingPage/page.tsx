@@ -1,16 +1,8 @@
-
-import React, { FormEvent } from "react";
-import { signOut } from "firebase/auth";
-import { authInstance } from "../(firebase)/AuthContext";
 import MainBar from "./main";
-
 
 function LandingPage({ children }: { children: React.ReactNode }) {
   
-  const HandleLogOut = (e: FormEvent) => {
-    e.preventDefault();
-    signOut(authInstance);
-  };
+  
 
   
   return (

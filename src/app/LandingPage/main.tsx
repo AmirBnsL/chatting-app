@@ -8,11 +8,11 @@ import ChatBox from "./(components)/ChatBox";
 import ChatInput from "./(components)/ChatInput";
 
 
-function MainBar() {
+function MainBar() { 
     const currentChat = useSelector((state: RootState) => state.context.currentChat);
 
   return (
-    <div>
+    <div className="w-full h-full flex flex-col">
         {
         currentChat && (
         <>

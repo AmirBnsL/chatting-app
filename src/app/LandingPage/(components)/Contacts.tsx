@@ -33,15 +33,13 @@ async function getDocFromName(name: string) {
 
 function Contacts({ fetchedDB }: { fetchedDB: DocumentData[] | null}) {
   const contacts = useSelector((state: RootState) => state.contacts.contacts);
-  const friendsArr = useSelector(
-    (state: RootState) => state.contacts.friendArr
-  );
-  const dbUsers = useSelector((state: RootState) => state.contacts.dbUsers);
+    const dbUsers = useSelector((state: RootState) => state.contacts.dbUsers);
   const currentUser = useSelector((state: RootState) => state.context.user);
   const dispatch = useDispatch();
     
   
   const fillFromfbDocs =async (friendsArr:Array<string>) => {
+    // gets each friends and pushes it into newContacts from firebase documents in firestore
     const newContacts: DocumentData[] = [];
       for (const friend of friendsArr) {
         const friendDoc = await getDocFromName(friend);
@@ -50,7 +48,6 @@ function Contacts({ fetchedDB }: { fetchedDB: DocumentData[] | null}) {
       }
     return newContacts;
     }
-  
 
   const updateContacts = async (friendArr:Array<string>) => {
     const newContacts = await fillFromfbDocs(friendArr); 
@@ -83,7 +80,8 @@ function Contacts({ fetchedDB }: { fetchedDB: DocumentData[] | null}) {
   })
   return (
     <>
-      {searchedContacts?.map((contact, index) => (
+
+      {fetchedDB && searchedContacts?.map((contact, index) => (
         <ContactItem contact={contact} key={index}></ContactItem>
       ))}
     </>

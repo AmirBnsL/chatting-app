@@ -23,9 +23,11 @@ export default function AddContact() {
     const isContactUnique = !contacts.some((contact) => contact.name === searchedContact);
     console.log(isContactUnique);
 
-
+    console.log(dbUsers)
+    console.log({searchedContact})
     const foundObject  = dbUsers?.find(
       (user : DocumentData) =>{
+        console.log('username',user.name)
         return user.name === searchedContact && user.name !== currentUser?.displayName
 
       }

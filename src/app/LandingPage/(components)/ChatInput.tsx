@@ -18,8 +18,6 @@ function ChatInput() {
   };
   const HandleSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    console.log(message);
-    console.log('current',currentChat)
     const colRef = collection(db, "chats");
     addDoc(colRef, {
       message: message,
@@ -28,7 +26,6 @@ function ChatInput() {
       to: currentChat?.email
     });
     setMessage("");
-    e.target.value="";
   };
   return (
     <form
@@ -40,6 +37,7 @@ function ChatInput() {
         placeholder="Type message"
         className="grow p-4 rounded-lg bg-gray-950 placeholder:text-gray-600"
         onChange={HandleChange}
+        value={message}
       ></input>
       <button  onClick={HandleSubmit}>
         <img src="/images/paper-plane.svg" className="w-8 h-8 "></img>

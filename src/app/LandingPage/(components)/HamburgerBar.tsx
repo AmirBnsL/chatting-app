@@ -1,10 +1,12 @@
 
 
-import React, { ReactNode } from "react";
+import React, { FormEvent, ReactNode } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/lib/redux/store";
 import { toggleHamburger } from "@/app/lib/redux/Features/hamburger/hamburgerSlice";
+import { signOut } from "firebase/auth";
+import { authInstance } from "@/app/(firebase)/AuthContext";
 
 function Profile() {
   return (
@@ -58,6 +60,16 @@ const DropDownMenu = ({ children }: { children: ReactNode }) => {
 function HamburgerBar() {
   const isOpen = useSelector((state: RootState) => state.hamburger.isOpen);
   const dispatch = useDispatch();
+
+
+  const HandleLogOut = (e: FormEvent) => {
+    e.preventDefault();
+    signOut(authInstance);
+  };
+
+
+
+
   return (
     <>
       <div className="w-full flex flex-col justify-center bg-blue-900">
@@ -107,6 +119,7 @@ function HamburgerBar() {
             }
             imgSrc={"/images/darkmode.png"}
           ></MenuItem>
+          <div className='text-gray-100 font-semibold text-lg w-10/12' onClick={HandleLogOut}>LogOut</div>
         </div>
       </div>
     </>
