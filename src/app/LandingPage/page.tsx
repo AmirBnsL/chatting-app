@@ -1,7 +1,8 @@
+import { JsxElement } from "typescript";
 import MainBar from "./main";
 import { ReactNode } from "react";
 
-interface LandingPageProps {
+export interface LandingPageProps {
   children: ReactNode;
 }
 
